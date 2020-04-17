@@ -1,0 +1,26 @@
+import RPi.GPIO as gpio
+import time
+from Bluetin_Echo import Echo
+gpio.setmode(gpio.BCM)
+
+Trig = 21
+Echopin = 20
+speed = 340
+
+echo = Echo(Trig,Echopin,speed)
+gpio.setup(19, gpio.OUT)
+
+p = gpio.PWM(19,100)
+p.start(0)
+
+while(True):
+    
+    result = ((100 - echo.read("cm",3))*100)/300
+    print(result)
+    if(result>0):
+        p.ChangeDutyCycle(result)
+    else:
+        p.ChangeDutyCycle(0)
+   
+    
+gpio.cleanup()
